@@ -3,6 +3,7 @@ import { CgClose } from "react-icons/cg";
 import { toast } from "react-toastify";
 import summaryApi from "../common";
 import ClipLoader from "react-spinners/ClipLoader";
+
 const AddsliderImage = ({ onClose }) => {
   const [file, setFile] = useState(null);
   const [sliderName, setSliderName] = useState("");
@@ -15,6 +16,17 @@ const AddsliderImage = ({ onClose }) => {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
+    }
+  };
+
+  const handleDeletePreview = () => {
+    setFile(null);
+    setPreviewUrl("");
+
+    // Clear the file input value
+    const fileInput = document.getElementById("file"); // Get the file input element
+    if (fileInput) {
+      fileInput.value = "";
     }
   };
 
@@ -82,10 +94,10 @@ const AddsliderImage = ({ onClose }) => {
               placeholder="Enter Slider Name"
               value={sliderName}
               onChange={(e) => setSliderName(e.target.value)}
-              className="p-2 bg-slate-100 border rounded w-full text-sm sm:text-base"
+              className="p-2 bg-slate-100 border rounded w-full text-sm sm:text-base h-12 max-h-24"
               required
             />
-            <label htmlFor="description" className="mt-1">
+            <label htmlFor="description" className="mt-1 h-auto">
               Description:
             </label>
             <textarea
@@ -95,7 +107,7 @@ const AddsliderImage = ({ onClose }) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="p-2 bg-slate-100 resize-none border rounded w-full text-sm sm:text-base h-20"
+              className="p-2 bg-slate-100 resize-none border rounded w-full text-sm sm:text-base h-12 max-h-24"
               required
             ></textarea>
             <div>
@@ -110,25 +122,27 @@ const AddsliderImage = ({ onClose }) => {
                 id="file"
                 onChange={handleFileChange}
                 className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              {file && (
-                <p className="mt-2 text-sm text-gray-500">
-                  Selected file: {file.name}
-                </p>
-              )}
+              />              
             </div>
             {previewUrl && (
-              <div className="mt-4 w-full flex justify-center">
+              <div className="mt-4 w-full h-auto flex justify-center relative">
                 <img
                   src={previewUrl}
                   alt="Preview"
-                  className="max-w-full h-auto max-h-48 rounded object-cover sm:max-h-64"
+                  className="max-w-full h-auto max-h-40 rounded object-cover sm:max-h-56"
                 />
+                <button
+                  type="button"
+                  onClick={handleDeletePreview}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                >
+                  <CgClose className="text-lg" />
+                </button>
               </div>
             )}
             <button
               type="submit"
-              className="px-3 py-2 bg-black mb-5 w-full sm:w-auto sm:px-4 rounded-xl cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg text-white text-sm sm:text-base"
+              className="px-3 py-2 h-10 bg-black mb-5 w-full sm:w-auto sm:px-4 rounded-xl cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg text-white text-sm sm:text-base"
               disabled={loading || !file || !sliderName || !description} // Disable button when loading
             >
               {loading ? (
